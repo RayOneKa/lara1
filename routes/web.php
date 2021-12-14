@@ -19,16 +19,8 @@ Route::get('/', function () {
     return view('welcome');
 })->name('main');
 
-Route::get('/test', function () {
-    return 'Вы на тестовой странице';
-});
-
-
 Route::get('/home', [HomeController::class, 'index'])->name('home');
-
-Route::post('postRequestTest', function () {
-    return '<button>!!!!</button>';
-})->name('postRequestTest');
+Route::get('/home/profile', [HomeController::class, 'profile'])->name('profile');
 
 // Route::any('/{any}', function () {
 //     return redirect(route('main'));
@@ -36,9 +28,7 @@ Route::post('postRequestTest', function () {
 
 Auth::routes();
 
-Route::get('/home/test', [App\Http\Controllers\HomeController::class, 'test']);
-
-Route::get('/categories/{id}', [App\Http\Controllers\HomeController::class, 'category']);
+Route::get('/categories/{category}', [App\Http\Controllers\HomeController::class, 'category']);
 
 Route::prefix('admin')->middleware(['auth', 'is_admin'])->group(function () {
 
