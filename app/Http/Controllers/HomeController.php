@@ -2,7 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
+use App\Models\Category;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
 
 class HomeController extends Controller
 {
@@ -23,17 +26,28 @@ class HomeController extends Controller
      */
     public function index()
     {
-        return view('home');
+        $user = Auth::user();
+        $date = date('d.m.Y H:i:s');
+        Storage::append('ownLog.log', "[HomePageEnter] $date {$user->name} зашел на страницу home");
+        $categories = Category::get();
+
+        $data = [
+            'categories' => $categories,
+            'title' => 'Список категорий',
+            'showTitle' => true
+        ];
+        return view('home', $data);
     }
 
-    public function test()
-    {
-        return view('test');
-    }
-
-    public function category($id)
+    public function category (Category $category)
     {
         $test = 'Тестовое значение';
-        return view('category', ['id' => $id, 'test' => $test]);
+        return view('category', ['category' => $category, 'test' => $test]);
+    }
+
+    public function profile ()
+    {
+        $user = Auth::user();
+        return view('profile', compact('user'));
     }
 }
