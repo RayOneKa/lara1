@@ -3,6 +3,7 @@
 use Illuminate\Foundation\Inspiring;
 use Illuminate\Support\Facades\Artisan;
 use App\Models\Category;
+use Illuminate\Routing\Route;
 use Illuminate\Support\Facades\DB;
 
 /*
@@ -15,6 +16,13 @@ use Illuminate\Support\Facades\DB;
 | simple approach to interacting with each command's IO methods.
 |
 */
+
+Artisan::command('test', function () {
+    $str = 'En_en';
+
+    $new_str = str_replace('_', '-', $str);
+    dd($new_str);
+});
 
 Artisan::command('inspire', function () {
 
