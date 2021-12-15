@@ -3,9 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Models\Category;
+use App\Models\User;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Validator;
 
 class HomeController extends Controller
 {
@@ -45,9 +47,35 @@ class HomeController extends Controller
         return view('category', ['category' => $category, 'test' => $test]);
     }
 
-    public function profile ()
+    public function profile (Request $request)
     {
         $user = Auth::user();
         return view('profile', compact('user'));
+    }
+
+    public function profileUpdate (Request $request)
+    {
+        $request->validate([
+            'picture' => 'mimes:jpg,bmp,png',
+            'name' => 'required|max:255',
+            'email' => 'required|email'
+        ]);
+
+        $user = Auth::user();
+
+        $file = $request->file('picture');
+        $input = $request->all();
+
+        if ($file) {
+            $ext = $file->getClientOriginalExtension();
+            $fileName = time() . rand(1000, 9999) . '.' . $ext;
+            $file->storeAs('public/users', $fileName);
+            $user->picture = $fileName;
+        }
+
+        $user->name = $input['name'];
+        $user->email = $input['email'];
+        $user->save();
+        return back();
     }
 }
