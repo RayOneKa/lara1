@@ -19,8 +19,12 @@ Route::get('/', function () {
     return view('welcome');
 })->name('main');
 
-Route::get('/home', [HomeController::class, 'index'])->name('home');
-Route::get('/home/profile', [HomeController::class, 'profile'])->name('profile');
+Route::prefix('home')->group(function () {
+    Route::get('/', [HomeController::class, 'index'])->name('home');
+    Route::get('/profile', [HomeController::class, 'profile'])->name('profile');
+    Route::post('/profile/update', [HomeController::class, 'profileUpdate'])->name('profileUpdate');
+});
+
 
 // Route::any('/{any}', function () {
 //     return redirect(route('main'));
