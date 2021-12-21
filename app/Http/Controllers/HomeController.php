@@ -7,7 +7,6 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Facades\Validator;
 
 class HomeController extends Controller
 {
@@ -41,14 +40,9 @@ class HomeController extends Controller
         return view('home', $data);
     }
 
-    public function category (Category $category)
-    {
-        $test = 'Тестовое значение';
-        return view('category', ['category' => $category, 'test' => $test]);
-    }
-
     public function profile (Request $request)
     {
+        // Auth::loginUsingId(1);
         $user = Auth::user();
         return view('profile', compact('user'));
     }
@@ -61,7 +55,7 @@ class HomeController extends Controller
             'email' => 'required|email'
         ]);
 
-        $user = Auth::user();
+        $user = User::find(Auth::user()->id);
 
         $file = $request->file('picture');
         $input = $request->all();

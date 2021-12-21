@@ -1,11 +1,11 @@
 <?php
 
-use Illuminate\Foundation\Inspiring;
 use Illuminate\Support\Facades\Artisan;
+use Illuminate\Foundation\Inspiring;
 use App\Models\Category;
+use App\Models\User;
 use Carbon\Carbon;
-use Illuminate\Routing\Route;
-use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 
 /*
 |--------------------------------------------------------------------------
@@ -19,22 +19,65 @@ use Illuminate\Support\Facades\DB;
 */
 
 Artisan::command('parseEkatalog', function () {
+    $products = [];
 
-    $data = file_get_contents('https://www.e-katalog.ru/ek-list.php?katalog_=189&search_=3090');
+    $url = 'https://www.e-katalog.ru/ek-list.php?katalog_=189&search_=3090';
+    $data = file_get_contents($url);
 
     $dom = new DomDocument();
     @$dom->loadHTML('<?xml encoding="UTF-8">' . $data);
-
     $xpath = new DOMXpath($dom);
-    $tables = $xpath->query("//table[@class='model-short-block']");
 
-    foreach ($tables as $table) {
-        $as = $xpath->query("descendant::a[@class='model-short-title no-u']", $table);
-        if ($as->length == 1) {
-            $name = $as[0]->nodeValue;
-            dump($name);
+    $h1 = $xpath->query("//h1[@class='ib']");
+    if ($h1->length == 1) {
+        $title = explode(' ', $h1[0]->nodeValue);
+        $productsCount = $title[count($title) - 2];
+    }
+
+    $tables = $xpath->query("//table[@class='model-short-block']");
+    $pages = ceil($productsCount / $tables->length);
+
+    for ($i = 0; $i < $pages; $i++) {
+        $page = "$url&page_=$i";
+        $data = file_get_contents($page);
+        $dom = new DomDocument();
+        @$dom->loadHTML('<?xml encoding="UTF-8">' . $data);
+        $xpath = new DOMXpath($dom);
+        $tables = $xpath->query("//table[@class='model-short-block']");
+        foreach ($tables as $table) {
+            $range = null;
+            $name = null;
+            $price = null;
+            $as = $xpath->query("descendant::a[@class='model-short-title no-u']", $table);
+            if ($as->length == 1) {
+                $name = $as[0]->nodeValue;
+            }
+
+            $divs = $xpath->query("descendant::div[@class='model-price-range']", $table);
+            if ($divs->length == 1) {
+                foreach ($divs[0]->childNodes as $child) {
+                    if ($child->nodeName == 'a') {
+                        $price = $child->nodeValue;
+                        $range = true;
+                    }
+                }
+            }
+
+            $divs = $xpath->query("descendant::div[@class='pr31 ib']", $table);
+            if ($divs->length == 1) {
+                $price = $divs[0]->nodeValue;
+                $range = false;
+            }
+
+            $products[] = [
+                'name' => $name,
+                'price' => $price,
+                'range' => $range,
+            ];
         }
     }
+
+    dd($products);
 });
 
 Artisan::command('exportCategories', function () {
@@ -81,6 +124,11 @@ Artisan::command('importCategories', function () {
 });
 
 Artisan::command('test', function () {
+
+    dd(Hash::make('123'));
+
+    // User::factory('5')->create();
+
     $str = 'En_en';
 
     $new_str = str_replace('_', '-', $str);

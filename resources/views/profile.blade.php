@@ -43,7 +43,7 @@
                     Изображение
                 </label>
                 <br>
-                <img style="height:100px;margin-bottom: 10px;" src="{{asset('storage/users/')}}/{{$user->picture}}">
+                <img style="height:100px;margin-bottom: 10px;" src="{{asset('storage/img/users/')}}/{{$user->picture}}">
                 <input class="form-control" name="picture" type="file">
             </div>
             <button type="submit" class="btn btn-primary">Сохранить</button>
