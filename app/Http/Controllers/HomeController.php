@@ -2,12 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Address;
 use App\Models\Category;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Facades\Validator;
 
 class HomeController extends Controller
 {
@@ -18,7 +18,7 @@ class HomeController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('auth');
+
     }
 
     /**
@@ -29,8 +29,11 @@ class HomeController extends Controller
     public function index()
     {
         $user = Auth::user();
-        $date = date('d.m.Y H:i:s');
-        Storage::append('ownLog.log', "[HomePageEnter] $date {$user->name} зашел на страницу home");
+        if ($user) {
+            $date = date('d.m.Y H:i:s');
+            Storage::append('ownLog.log', "[HomePageEnter] $date {$user->name} зашел на страницу home");
+        }
+
         $categories = Category::get();
 
         $data = [
@@ -41,15 +44,11 @@ class HomeController extends Controller
         return view('home', $data);
     }
 
-    public function category (Category $category)
-    {
-        $test = 'Тестовое значение';
-        return view('category', ['category' => $category, 'test' => $test]);
-    }
-
     public function profile (Request $request)
     {
+        // Auth::loginUsingId(1);
         $user = Auth::user();
+        // $addresses = Address::where('user_id', $user->id)->get();
         return view('profile', compact('user'));
     }
 
@@ -61,7 +60,7 @@ class HomeController extends Controller
             'email' => 'required|email'
         ]);
 
-        $user = Auth::user();
+        $user = User::find(Auth::user()->id);
 
         $file = $request->file('picture');
         $input = $request->all();
@@ -73,9 +72,23 @@ class HomeController extends Controller
             $user->picture = $fileName;
         }
 
+        if ($input['new_address']) {
+
+            $mainAddress = $user->addresses->contains(function ($address) {
+                return $address->main == true;
+            });
+
+            $address = new Address();
+            $address->user_id = $user->id;
+            $address->address = $input['new_address'];
+            $address->main = !$mainAddress;
+            $address->save();
+        }
+
         $user->name = $input['name'];
         $user->email = $input['email'];
         $user->save();
+        session()->flash('profileUpdated');
         return back();
     }
 }
