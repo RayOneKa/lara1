@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\HomeController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
@@ -16,12 +17,12 @@ use Illuminate\Support\Facades\Auth;
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    return redirect()->route('home');
 })->name('main');
 
 Route::prefix('home')->group(function () {
     Route::get('/', [HomeController::class, 'index'])->name('home');
-    Route::get('/profile', [HomeController::class, 'profile'])->name('profile');
+    Route::get('/profile', [HomeController::class, 'profile'])->middleware('auth')->name('profile');
     Route::post('/profile/update', [HomeController::class, 'profileUpdate'])->name('profileUpdate');
 });
 
@@ -32,7 +33,7 @@ Route::prefix('home')->group(function () {
 
 Auth::routes();
 
-Route::get('/categories/{category}', [App\Http\Controllers\HomeController::class, 'category']);
+Route::get('/categories/{category}', [CategoryController::class, 'category'])->name('category');
 
 Route::prefix('admin')->middleware(['auth', 'is_admin'])->group(function () {
 
