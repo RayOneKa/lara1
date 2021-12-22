@@ -5,6 +5,12 @@
         <h3> ID категории: {{ $category->id }} </h3>
         <h3> Название категории: {{ $category->name }} </h3>
 
-        <a href="{{ route('home') }}">HOME</a>
+        <ul>
+        @foreach ($category->products as $product)
+            <li>
+                {{$product->name}}, {{$product->price}}
+            </li>
+        @endforeach
+        </ul>
     </div>
 @endsection

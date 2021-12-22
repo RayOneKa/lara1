@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Address;
 use App\Models\Category;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -17,7 +18,7 @@ class HomeController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('auth');
+
     }
 
     /**
@@ -28,8 +29,11 @@ class HomeController extends Controller
     public function index()
     {
         $user = Auth::user();
-        $date = date('d.m.Y H:i:s');
-        Storage::append('ownLog.log', "[HomePageEnter] $date {$user->name} зашел на страницу home");
+        if ($user) {
+            $date = date('d.m.Y H:i:s');
+            Storage::append('ownLog.log', "[HomePageEnter] $date {$user->name} зашел на страницу home");
+        }
+
         $categories = Category::get();
 
         $data = [
@@ -44,6 +48,7 @@ class HomeController extends Controller
     {
         // Auth::loginUsingId(1);
         $user = Auth::user();
+        // $addresses = Address::where('user_id', $user->id)->get();
         return view('profile', compact('user'));
     }
 
@@ -67,9 +72,23 @@ class HomeController extends Controller
             $user->picture = $fileName;
         }
 
+        if ($input['new_address']) {
+
+            $mainAddress = $user->addresses->contains(function ($address) {
+                return $address->main == true;
+            });
+
+            $address = new Address();
+            $address->user_id = $user->id;
+            $address->address = $input['new_address'];
+            $address->main = !$mainAddress;
+            $address->save();
+        }
+
         $user->name = $input['name'];
         $user->email = $input['email'];
         $user->save();
+        session()->flash('profileUpdated');
         return back();
     }
 }

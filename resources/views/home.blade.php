@@ -27,7 +27,7 @@
                     <img src="{{asset('storage/img/categories')}}/{{$category->picture}}" class="card-img-top" alt="{{$category->picture}}">
                     <div class="card-body">
                         <h5 class="card-title">
-                            {{$category->name}}
+                            {{$category->name}} ({{$category->products->count()}})
                         </h5>
                         <p class="card-text">
                             {{$category->description}}

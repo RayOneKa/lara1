@@ -8,15 +8,21 @@
 @section('content')
     <div class="container">
 
-    @if ($errors->any())
-        <div class="alert alert-danger">
-            <ul>
-                @foreach ($errors->all() as $error)
-                    <li>{{ $error }}</li>
-                @endforeach
-            </ul>
-        </div>
-    @endif
+        @if ($errors->any())
+            <div class="alert alert-danger">
+                <ul>
+                    @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
+
+        @if (session()->has('profileUpdated'))
+            <div class="alert alert-success text-center">
+                Профиль успешно обновлен!
+            </div>
+        @endif
 
         <form method="POST" action="{{ route('profileUpdate') }}" enctype="multipart/form-data">
             @csrf
@@ -43,8 +49,35 @@
                     Изображение
                 </label>
                 <br>
-                <img style="height:100px;margin-bottom: 10px;" src="{{asset('storage/img/users/')}}/{{$user->picture}}">
+                <img
+                    style="height:100px;margin-bottom: 10px;border-radius: 100px;border: 2px solid grey;"
+                    src="{{asset('storage/img/users/')}}/{{$user->picture}}"
+                >
                 <input class="form-control" name="picture" type="file">
+            </div>
+            <div class="mb-3">
+                <label class="form-label">
+                    Список адресов
+                </label>
+                <br>
+                @foreach ($user->addresses as $address)
+                    <span>
+                        @if ($address->main)
+                            <strong>
+                                {{$address->address}}
+                            </strong>
+                        @else
+                            {{$address->address}}
+                        @endif
+                    </span>
+                    <br>
+                @endforeach
+            </div>
+            <div class="mb-3">
+                <label class="form-label">
+                    Новый адрес
+                </label>
+                <input name="new_address" class="form-control">
             </div>
             <button type="submit" class="btn btn-primary">Сохранить</button>
         </form>

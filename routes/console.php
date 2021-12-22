@@ -125,14 +125,43 @@ Artisan::command('importCategories', function () {
 
 Artisan::command('test', function () {
 
-    dd(Hash::make('123'));
+    $numbers = collect([1, 2, 3]);
+
+    $hasTwo = $numbers->contains(function ($number) {
+        return $number == 22;
+    });
+
+    $users = User::get();
+
+    $users->transform(function ($user) {
+        return [
+            'id' => $user->id,
+            'name' => $user->name,
+        ];
+    });
+
+    $users = User::get();
+
+    $mappedUsers = $users->map(function ($user) {
+        return [
+            'id' => $user->id,
+            'name' => $user->name,
+        ];
+    });
+
+    $ids = $users->pluck('id');
+
+    dd($ids);
+
+
+    // dd(Hash::make('123'));
 
     // User::factory('5')->create();
 
-    $str = 'En_en';
+    // $str = 'En_en';
 
-    $new_str = str_replace('_', '-', $str);
-    dd($new_str);
+    // $new_str = str_replace('_', '-', $str);
+    // dd($new_str);
 });
 
 Artisan::command('inspire', function () {
