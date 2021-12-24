@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AdminController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\HomeController;
 use Illuminate\Support\Facades\Route;
@@ -37,7 +38,7 @@ Route::get('/categories/{category}', [CategoryController::class, 'category'])->n
 
 Route::prefix('admin')->middleware(['auth', 'is_admin'])->group(function () {
 
-    Route::redirect('/', '/admin/products');
+    // Route::redirect('/', '/admin/products');
 
     /*
     Route::get('/', function () {
@@ -45,6 +46,8 @@ Route::prefix('admin')->middleware(['auth', 'is_admin'])->group(function () {
     });
      */
 
+    Route::get('/', [AdminController::class, 'index'])->name('admin');
+    Route::get('/enterAsUser/{userId}', [AdminController::class, 'enterAsUser'])->name('enterAsUser');
 
     Route::get('/products', function () {
         return 'Админка: продукты';

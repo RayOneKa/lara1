@@ -17,6 +17,7 @@ class AlterPictureUsersTable extends Migration
             $table
             ->string('picture')
             ->default('nopicture.png')
+            ->nullable(false)
             ->change();
         });
     }
@@ -29,12 +30,10 @@ class AlterPictureUsersTable extends Migration
     public function down()
     {
         Schema::table('users', function (Blueprint $table) {
-            $table
-                ->string('picture')
-                ->after('is_admin')
-                ->nullable()
-                ->change();
+            $table->string('picture')
+            ->default(NULL)
+            ->nullable()
+            ->change();
         });
-
     }
 }

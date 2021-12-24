@@ -45,6 +45,36 @@
                 value="{{$user->name}}">
             </div>
             <div class="mb-3">
+                <label for="exampleInputPassword1" class="form-label">
+                    Текущий пароль
+                </label>
+                <input
+                class="form-control" 
+                name="current_password"
+                type="password"
+                >
+            </div>
+            <div class="mb-3">
+                <label for="exampleInputPassword1" class="form-label">
+                    Новый пароль
+                </label>
+                <input
+                class="form-control" 
+                name="password"
+                type="password"
+                >
+            </div>
+            <div class="mb-3">
+                <label for="exampleInputPassword1" class="form-label">
+                    Повторите пароль
+                </label>
+                <input
+                class="form-control" 
+                name="password_confirmation"
+                type="password"
+                >
+            </div>
+            <div class="mb-3">
                 <label class="form-label">
                     Изображение
                 </label>

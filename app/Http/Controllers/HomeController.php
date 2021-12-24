@@ -7,6 +7,7 @@ use App\Models\Category;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
 
 class HomeController extends Controller
@@ -57,18 +58,20 @@ class HomeController extends Controller
         $request->validate([
             'picture' => 'mimes:jpg,bmp,png',
             'name' => 'required|max:255',
-            'email' => 'required|email'
+            'email' => 'required|email',
+            'password' => 'confirmed',
         ]);
 
         $user = User::find(Auth::user()->id);
-
         $file = $request->file('picture');
         $input = $request->all();
+
+        $currentPassword = Hash::make($input['current_password']);
 
         if ($file) {
             $ext = $file->getClientOriginalExtension();
             $fileName = time() . rand(1000, 9999) . '.' . $ext;
-            $file->storeAs('public/users', $fileName);
+            $file->storeAs('public/img/users', $fileName);
             $user->picture = $fileName;
         }
 

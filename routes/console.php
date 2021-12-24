@@ -3,9 +3,9 @@
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Foundation\Inspiring;
 use App\Models\Category;
+use App\Models\Role;
 use App\Models\User;
 use Carbon\Carbon;
-use Illuminate\Support\Facades\Hash;
 
 /*
 |--------------------------------------------------------------------------
@@ -17,6 +17,29 @@ use Illuminate\Support\Facades\Hash;
 | simple approach to interacting with each command's IO methods.
 |
 */
+
+Artisan::command('createRolesUsers', function () {
+    
+    // collect(['Admin', 'Manager', 'Customer'])->each(function ($role, $idx) {
+    //     $role = new Role([
+    //         'name' => $role
+    //     ]);
+    //     $role->save();
+    // });
+
+    $user = User::find(1);
+
+    // collect(['Admin', 'Manager', 'Customer'])->each(function ($name, $idx) use ($user) {
+    //     $role = Role::where('name', $name)->first();
+    //     $user->roles()->attach($role);
+    // });
+
+    $user->roles->each(function ($role) {
+        dump($role->pivot->created_at->toDateTimeString());
+    });
+
+
+});
 
 Artisan::command('parseEkatalog', function () {
     $products = [];

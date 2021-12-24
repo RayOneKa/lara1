@@ -20,6 +20,14 @@
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
 
     @yield('style', '')
+    <style>
+        .dropdown-login {
+            padding: 0.25rem 1rem;
+        }
+        .nav-link-picture {
+            padding: 0;
+        }
+    </style>
 </head>
 <body>
     <div id="app">
@@ -54,13 +62,26 @@
                                 </li>
                             @endif
                         @else
+                            @if (Auth::user()->roles->pluck('name')->contains('Admin'))
+                                <li class="nav-item">
+                                    <a class="nav-link" href="{{ route('admin') }}">Админка</a>
+                                </li>
+                            @endif
                             <li class="nav-item dropdown">
-                                <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
-                                    {{ Auth::user()->name }}
+                                <a id="navbarDropdown" class="nav-link nav-link-picture dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
+                                <img
+                                    alt="{{ Auth::user()->name }}"
+                                    style="height:40px;border-radius: 100px;border: 1px solid grey;"
+                                    src="{{asset('storage/img/users/')}}/{{Auth::user()->picture}}"
+                                >
+                                    
                                 </a>
 
                                 <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
-                                    <a class=" dropdown-item" href="{{ route('profile') }}">Личный кабинет</a>
+                                    <span class="dropdown-login">
+                                        <strong>{{ Auth::user()->name }}</strong>
+                                    </span>
+                                    <a class="dropdown-item" href="{{ route('profile') }}">Личный кабинет</a>
                                     <a class="dropdown-item" href="{{ route('logout') }}"
                                        onclick="event.preventDefault();
                                                      document.getElementById('logout-form').submit();">
