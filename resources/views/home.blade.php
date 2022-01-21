@@ -5,6 +5,9 @@
 @endsection
 
 @section('content')
+
+<home-component></home-component>
+
 <div class="container">
     @auth
         Вы это читаете, потому что вы авторизованы

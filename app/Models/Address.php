@@ -9,6 +9,12 @@ class Address extends Model
 {
     use HasFactory;
 
+    protected $fillable = [
+        'address',
+        'user_id',
+        'main'
+    ];
+
     public function user ()
     {
         return $this->belongsTo(User::class);
