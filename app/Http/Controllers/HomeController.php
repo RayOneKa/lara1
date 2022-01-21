@@ -7,6 +7,7 @@ use App\Models\Category;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
 
 class HomeController extends Controller
@@ -57,12 +58,8 @@ class HomeController extends Controller
         $request->validate([
             'picture' => 'mimes:jpg,bmp,png',
             'name' => 'required|max:255',
-<<<<<<< Updated upstream
-            'email' => 'required|email'
-=======
             'email' => 'required|email',
             'password' => 'nullable|confirmed|min:8',
->>>>>>> Stashed changes
         ]);
 
         $user = User::find(Auth::user()->id);
