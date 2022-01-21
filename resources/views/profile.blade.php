@@ -24,6 +24,12 @@
             </div>
         @endif
 
+        @if (session()->has('currentPasswordError'))
+            <div class="alert alert-warning text-center">
+                Вы ввели неверный текущий пароль
+            </div>
+        @endif
+
         <form method="POST" action="{{ route('profileUpdate') }}" enctype="multipart/form-data">
             @csrf
             <div class="mb-3">
@@ -45,6 +51,37 @@
                 value="{{$user->name}}">
             </div>
             <div class="mb-3">
+                <label for="exampleInputPassword1" class="form-label">
+                    Текущий пароль
+                </label>
+                <input
+                autocomplete="new-password"
+                class="form-control" 
+                name="current_password"
+                type="password"
+                >
+            </div>
+            <div class="mb-3">
+                <label for="exampleInputPassword1" class="form-label">
+                    Новый пароль
+                </label>
+                <input
+                class="form-control" 
+                name="password"
+                type="password"
+                >
+            </div>
+            <div class="mb-3">
+                <label for="exampleInputPassword1" class="form-label">
+                    Повторите пароль
+                </label>
+                <input
+                class="form-control" 
+                name="password_confirmation"
+                type="password"
+                >
+            </div>
+            <div class="mb-3">
                 <label class="form-label">
                     Изображение
                 </label>
@@ -63,11 +100,15 @@
                 @foreach ($user->addresses as $address)
                     <span>
                         @if ($address->main)
-                            <strong>
+                            <label for="{{$address->id}}">
                                 {{$address->address}}
-                            </strong>
+                            </label>
+                            <input checked id="{{$address->id}}" type="radio" name="main_address" value="{{$address->id}}">
                         @else
-                            {{$address->address}}
+                            <label for="{{$address->id}}">
+                                {{$address->address}}
+                            </label>
+                            <input  id="{{$address->id}}" type="radio" name="main_address" value="{{$address->id}}">
                         @endif
                     </span>
                     <br>
@@ -78,6 +119,8 @@
                     Новый адрес
                 </label>
                 <input name="new_address" class="form-control">
+                <label>Сделать основным</label>
+                <input type="checkbox" name="main_new_address">
             </div>
             <button type="submit" class="btn btn-primary">Сохранить</button>
         </form>

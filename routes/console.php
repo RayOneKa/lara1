@@ -5,7 +5,8 @@ use Illuminate\Foundation\Inspiring;
 use App\Models\Category;
 use App\Models\User;
 use Carbon\Carbon;
-use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 /*
 |--------------------------------------------------------------------------
@@ -17,6 +18,88 @@ use Illuminate\Support\Facades\Hash;
 | simple approach to interacting with each command's IO methods.
 |
 */
+
+Artisan::command('queryBuilder', function () {
+
+    $data = DB::table('categories as c')
+        ->select(
+            'c.id',
+            'c.name',
+            'c.description'
+        )
+        ->where('name', 'Процессоры')
+        ->first();
+
+    $data = DB::table('categories as c')
+        ->select(
+            'c.name',
+            DB::raw('count(p.id) as product_quantity'),
+            DB::raw('sum(p.price) as priceAmount')
+        )
+        ->leftJoin('products as p', function ($join) {
+            $join->on('c.id', 'p.category_id');
+        })
+        ->groupBy('c.id')
+        ->get();
+
+    DB::table('categories')
+        ->orderBy('id')
+        ->chunk(4, function ($categories) {
+            dump($categories->count());
+        });
+});
+
+Artisan::command('updateCategory', function () {
+    
+    Auth::loginUsingId(1);
+    $procs = Category::where('name', 'Процессоры')->first();
+
+    $procs->description = 'Intel лучше!!!';
+    $procs->save();
+
+});
+
+Artisan::command('deleteCategory', function () {
+
+    Auth::loginUsingId(1);
+    Category::find(17)->delete();
+
+});
+
+Artisan::command('createCategory', function () {
+
+    Auth::loginUsingId(1);
+
+    $procs = new Category();
+    $procs->name = 'Видеокарты1';
+    $procs->description = 'Описание видеокарт1';
+    $procs->picture = '2.jpg';
+    $procs->save();
+
+});
+
+Artisan::command('createRolesUsers', function () {
+    
+    // collect(['Admin', 'Manager', 'Customer'])->each(function ($role, $idx) {
+    //     $role = new Role([
+    //         'name' => $role
+    //     ]);
+    //     $role->save();
+    // });
+
+    $user = User::find(1);
+
+    // collect(['Admin', 'Manager', 'Customer'])->each(function ($name, $idx) use ($user) {
+    //     $role = Role::where('name', $name)->first();
+    //     $user->roles()->attach($role);
+    // });
+
+    $user->roles->each(function ($role) {
+        dump($role->pivot->created_at->toDateTimeString());
+    });
+
+
+});
 
 Artisan::command('parseEkatalog', function () {
     $products = [];
@@ -78,27 +161,6 @@ Artisan::command('parseEkatalog', function () {
     }
 
     dd($products);
-});
-
-Artisan::command('exportCategories', function () {
-    $categories = Category::get()->toArray();
-    $file = fopen('exportCategories.csv', 'w');
-    $columns = [
-        'id',
-        'name',
-        'description',
-        'picture',
-        'created_at',
-        'updated_at'
-    ];
-    fputcsv($file, $columns, ';');
-    foreach ($categories as $category) {
-        $category['name'] = iconv('utf-8', 'windows-1251//IGNORE', $category['name']);
-        $category['description'] = iconv('utf-8', 'windows-1251//IGNORE', $category['description']);
-        $category['picture'] = iconv('utf-8', 'windows-1251//IGNORE', $category['picture']);
-        fputcsv($file, $category, ';');
-    }
-    fclose($file);
 });
 
 Artisan::command('importCategories', function () {

@@ -57,13 +57,29 @@ class HomeController extends Controller
         $request->validate([
             'picture' => 'mimes:jpg,bmp,png',
             'name' => 'required|max:255',
+<<<<<<< Updated upstream
             'email' => 'required|email'
+=======
+            'email' => 'required|email',
+            'password' => 'nullable|confirmed|min:8',
+>>>>>>> Stashed changes
         ]);
 
         $user = User::find(Auth::user()->id);
 
         $file = $request->file('picture');
         $input = $request->all();
+
+        if ($input['password']) {
+            $currentPassword = $input['current_password'];
+            if (!Hash::check($currentPassword, request()->user()->password)) {
+                session()->flash('currentPasswordError');
+                return back();
+            } else {
+                $user->password = Hash::make($input['password']);
+                $user->save();
+            }
+        }
 
         if ($file) {
             $ext = $file->getClientOriginalExtension();
@@ -72,16 +88,31 @@ class HomeController extends Controller
             $user->picture = $fileName;
         }
 
+        $address = Address::find($input['main_address']);
+        $address->main = 1;
+        $address->save();
+        Address::where('user_id', $user->id)->where('id', '!=', $input['main_address'])->update([
+            'main' => 0
+        ]);
+
         if ($input['new_address']) {
 
-            $mainAddress = $user->addresses->contains(function ($address) {
-                return $address->main == true;
-            });
+            if ($input['main_new_address']) {
+                Address::where('user_id', $user->id)->update([
+                    'main' => 0
+                ]);
+                $mainAddress = true;
+            } else {
+                $mainAddress = !$user->addresses->contains(function ($address) {
+                    return $address->main == true;
+                });
+            }
+
 
             $address = new Address();
             $address->user_id = $user->id;
             $address->address = $input['new_address'];
-            $address->main = !$mainAddress;
+            $address->main = $mainAddress;
             $address->save();
         }
 
