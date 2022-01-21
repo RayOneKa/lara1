@@ -40,6 +40,11 @@
 
                     <!-- Right Side Of Navbar -->
                     <ul class="navbar-nav ms-auto">
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ route('basket') }}">
+                                Корзина ({{ array_sum(session('products') ?? []) }})
+                            </a>
+                        </li>
                         <!-- Authentication Links -->
                         @guest
                             @if (Route::has('login'))
@@ -61,6 +66,11 @@
 
                                 <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
                                     <a class=" dropdown-item" href="{{ route('profile') }}">Личный кабинет</a>
+                                    <span class="dropdown-login">
+                                        <strong>{{ Auth::user()->name }}</strong>
+                                    </span>
+                                    <a class="dropdown-item" href="{{ route('profile') }}">Личный кабинет</a>
+                                    <a class="dropdown-item" href="{{ route('orders') }}">Заказы</a>
                                     <a class="dropdown-item" href="{{ route('logout') }}"
                                        onclick="event.preventDefault();
                                                      document.getElementById('logout-form').submit();">
@@ -79,7 +89,9 @@
         </nav>
 
         <main class="py-4">
-            @yield('content')
+            <div class="container">
+                @yield('content')
+            </div>
         </main>
     </div>
 </body>
