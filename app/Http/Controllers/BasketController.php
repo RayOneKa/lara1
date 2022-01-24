@@ -53,7 +53,9 @@ class BasketController extends Controller
 
         session()->put('products', $products);
         session()->save();
-        return back();
+        return [
+            'quantity' => $products[$id]
+        ];
     }
 
     public function remove()
@@ -73,7 +75,9 @@ class BasketController extends Controller
 
         session()->put('products', $products);
         session()->save();
-        return back();
+        return [
+            'quantity' => $products[$id] ?? 0
+        ];
     }
 
     public function createOrder (Request $request)
