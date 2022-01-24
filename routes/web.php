@@ -59,6 +59,7 @@ Route::get('/email/verify/{id}/{hash}', function (EmailVerificationRequest $requ
 })->middleware(['auth', 'signed'])->name('verification.verify');
 
 Route::get('/categories/{category}', [CategoryController::class, 'category'])->name('category');
+Route::get('/categories/{category}/getProducts', [CategoryController::class, 'getProducts']);
 
 Route::prefix('admin')->middleware(['auth', 'is_admin'])->group(function () {
 
