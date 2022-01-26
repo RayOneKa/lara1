@@ -22,14 +22,6 @@
 
 <script>
     export default {
-        props: ['categories', 'source'],
-        data () {
-            return {
-
-            }
-        },
-        mounted () {
-
-        }
+        props: ['categories', 'source']
     }
 </script>

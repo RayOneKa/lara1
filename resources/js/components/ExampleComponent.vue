@@ -1,9 +1,22 @@
 <template>
     <div>
         <h1>Список категорий</h1>
-        <button @click="clickCounter" class="btn btn-primary">CLICK {{ counter }}</button>
 
-        <span v-if="showText || counter > 3" @click="showText = false">
+        <clicker-component
+            @clickerClicked="clickerClicked"
+            name='clicker1'
+            :customClass="clickerClass1"
+        >
+        </clicker-component>
+        <br>
+        <clicker-component
+            @clickerClicked="clickerClicked"
+            name='clicker2'
+            :customClass="clickerClass2"
+        >
+        </clicker-component>
+
+        <span v-if="showText" @click="showText = false">
             Some text
         </span>
 
@@ -36,11 +49,35 @@
         {{ translited }}
         <br>
         <button @click='sayMyName' class="btn" :disabled="!isSuccess" :class="buttonClass">Назови мое имя</button>
+
+        <br>
+
+        <input v-model="checked" type="checkbox"> {{ checked }}
+
+        <br>
+
+        <input v-model="radioButton" type="radio" name="radioButton" value="1">
+        <input v-model="radioButton" type="radio" name="radioButton" value="2">
+        <input v-model="radioButton" type="radio" name="radioButton" value="3">
+        {{ radioButton }}
+        
+        <select v-model="selectedValue" class="form-control">
+            <option>1</option>
+            <option>2</option>
+            <option>3</option>
+        </select>
+
+        {{ selectedValue }}
+
     </div>
 </template>
 
 <script>
+    import ClickerComponent from './ClickerComponent.vue'
+
     export default {
+        props: [],
+        components: {ClickerComponent},
         data () {
             return {
                 categories: [
@@ -57,13 +94,17 @@
                         name: 'Жесткие диски'
                     }
                 ],
-                counter: 0,
                 showText: true,
                 name: '',
                 translitedName: '',
                 firstName: 'Rail',
                 lastName: 'Mingaliev',
-                isSuccess: false
+                isSuccess: false,
+                checked: true,
+                radioButton: null,
+                selectedValue: 2,
+                clickerClass1: 'btn-primary',
+                clickerClass2: 'btn-primary'
             }
         },
         computed: {
@@ -77,12 +118,20 @@
                 return this.firstName + ' ' + this.lastName
             }
         },
+        watch: {
+            selectedValue: (newValue, preValue) => {
+                console.log(`новое значение: ${newValue}, старое значение: ${preValue}`)
+            }
+        },
         methods: {
-            clickCounter () {
-                this.counter++
-                this.sayHello()
-
-                this.isSuccess = true
+            clickerClicked (payload) {
+                if (payload.counter > 5) {
+                    if (payload.name == 'clicker1') {
+                        this.clickerClass1 = 'btn-success'
+                    } else if (payload.name == 'clicker2') {
+                        this.clickerClass2 = 'btn-danger'
+                    }
+                }
             },
             sayHello () {
                 console.log('Hello')

@@ -24,6 +24,10 @@ Route::get('/', function () {
     return redirect()->route('home');
 })->name('main');
 
+Route::get('/test', function () {
+    return view('test');
+});
+
 Route::prefix('home')->group(function () {
     Route::get('/', [HomeController::class, 'index'])->name('home');
     Route::get('/profile', [HomeController::class, 'profile'])->middleware('auth')->name('profile');
