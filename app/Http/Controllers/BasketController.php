@@ -149,6 +149,12 @@ class BasketController extends Controller
         return back();
     }
 
+    public function getProductsQuantity ()
+    {
+        $products = session('products', []);
+        return collect($products)->sum();
+    }
+
     protected function generatePassword ($type, $lenght)
     {
         switch ($type) {
