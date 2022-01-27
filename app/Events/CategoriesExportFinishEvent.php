@@ -11,7 +11,7 @@ use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Log;
 
-class CategoriesExportFinishEvent
+class CategoriesExportFinishEvent implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
@@ -20,16 +20,10 @@ class CategoriesExportFinishEvent
     public function __construct ($message)
     {
         $this->message = $message;
-        Log::info($message);
     }
   
     public function broadcastOn()
     {
         return ['general'];
-    }
-  
-    public function broadcastAs()
-    {
-        return 'categories-export-finish';
     }
 }

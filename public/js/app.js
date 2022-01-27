@@ -5915,7 +5915,7 @@ vue__WEBPACK_IMPORTED_MODULE_2__["default"].use((vue_sweetalert2__WEBPACK_IMPORT
 window.Pusher = __webpack_require__(/*! pusher-js */ "./node_modules/pusher-js/dist/web/pusher.js");
 window.Echo = new laravel_echo__WEBPACK_IMPORTED_MODULE_3__["default"]({
   broadcaster: 'pusher',
-  key: "a53dbcace147f0da1cbd",
+  key: "61ae2ff3c1e0c1c04063",
   cluster: "eu",
   forceTLS: true
 });
