@@ -68,7 +68,7 @@ Route::get('/categories/{category}/getProducts', [CategoryController::class, 'ge
 
 Route::prefix('admin')->middleware(['auth', 'is_admin'])->group(function () {
 
-    Route::redirect('/', '/admin/products');
+    // Route::redirect('/', '/admin/products');
 
     /*
     Route::get('/', function () {
