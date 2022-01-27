@@ -40,11 +40,7 @@
 
                     <!-- Right Side Of Navbar -->
                     <ul class="navbar-nav ms-auto">
-                        <li class="nav-item">
-                            <a class="nav-link" href="{{ route('basket') }}">
-                                Корзина ({{ array_sum(session('products') ?? []) }})
-                            </a>
-                        </li>
+                        <navbar-basket-component></navbar-basket-component>
                         <!-- Authentication Links -->
                         @guest
                             @if (Route::has('login'))
