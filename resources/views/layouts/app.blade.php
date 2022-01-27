@@ -49,6 +49,7 @@
                     <!-- Right Side Of Navbar -->
                     <ul class="navbar-nav ms-auto">
                         <navbar-basket-component></navbar-basket-component>
+
                         <!-- Authentication Links -->
                         @guest
                             @if (Route::has('login'))
@@ -75,9 +76,7 @@
                                     style="height:40px;border-radius: 100px;border: 1px solid grey;"
                                     src="{{asset('storage/img/users/')}}/{{Auth::user()->picture}}"
                                 >
-                                    
                                 </a>
-
                                 <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
                                     <span class="dropdown-login">
                                         <strong>{{ Auth::user()->name }}</strong>
