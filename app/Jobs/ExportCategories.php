@@ -2,6 +2,7 @@
 
 namespace App\Jobs;
 
+use App\Events\CategoriesExportFinishEvent;
 use App\Models\Category;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -56,5 +57,8 @@ class ExportCategories implements ShouldQueue
             fputcsv($file, $category, ';');
         }
         fclose($file);
+
+        event(new CategoriesExportFinishEvent('test'));
+        CategoriesExportFinishEvent::dispatch('test');
     }
 }
