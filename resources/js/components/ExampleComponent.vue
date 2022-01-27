@@ -110,6 +110,7 @@
         computed: {
             buttonClass () {
                 return this.isSuccess ? 'btn-success' : 'btn-info'
+                console.log('!')
             },
             translited () {
                 return this.translit(this.name)
