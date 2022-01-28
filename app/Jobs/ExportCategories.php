@@ -59,6 +59,5 @@ class ExportCategories implements ShouldQueue
         fclose($file);
 
         event(new CategoriesExportFinishEvent('test'));
-        CategoriesExportFinishEvent::dispatch('test');
     }
 }
