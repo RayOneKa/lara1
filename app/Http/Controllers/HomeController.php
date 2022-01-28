@@ -63,10 +63,10 @@ class HomeController extends Controller
         ]);
 
         $user = User::find(Auth::user()->id);
-
         $file = $request->file('picture');
         $input = $request->all();
 
+        $currentPassword = Hash::make($input['current_password']);
         if ($input['password']) {
             $currentPassword = $input['current_password'];
             if (!Hash::check($currentPassword, request()->user()->password)) {
@@ -81,7 +81,7 @@ class HomeController extends Controller
         if ($file) {
             $ext = $file->getClientOriginalExtension();
             $fileName = time() . rand(1000, 9999) . '.' . $ext;
-            $file->storeAs('public/users', $fileName);
+            $file->storeAs('public/img/users', $fileName);
             $user->picture = $fileName;
         }
 

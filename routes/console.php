@@ -4,6 +4,7 @@ use App\Events\CategoriesExportFinishEvent;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Foundation\Inspiring;
 use App\Models\Category;
+use App\Models\Role;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
