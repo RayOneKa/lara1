@@ -9,6 +9,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\Storage;
 
 class ExportCategories implements ShouldQueue
 {
@@ -36,7 +37,7 @@ class ExportCategories implements ShouldQueue
     public function handle()
     {
         $categories = Category::get()->toArray();
-        $file = fopen('exportCategories.csv', 'w');
+        Storage::delete('/public/exportCategories.csv');
 
         if ($this->exportColumns) {
             $columns = [
@@ -47,18 +48,15 @@ class ExportCategories implements ShouldQueue
                 'created_at',
                 'updated_at'
             ];
-            fputcsv($file, $columns, ';');
+            Storage::append('/public/exportCategories.csv', implode(';', $columns));
         }
 
         foreach ($categories as $category) {
             $category['name'] = iconv('utf-8', 'windows-1251//IGNORE', $category['name']);
             $category['description'] = iconv('utf-8', 'windows-1251//IGNORE', $category['description']);
             $category['picture'] = iconv('utf-8', 'windows-1251//IGNORE', $category['picture']);
-            fputcsv($file, $category, ';');
+            Storage::append('/public/exportCategories.csv', implode(';', $category));
         }
-        fclose($file);
-
-        event(new CategoriesExportFinishEvent('test'));
-        CategoriesExportFinishEvent::dispatch('test');
+        event(new CategoriesExportFinishEvent('exportCategories.csv'));
     }
 }
