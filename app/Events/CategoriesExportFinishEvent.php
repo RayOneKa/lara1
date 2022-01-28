@@ -22,4 +22,9 @@ class CategoriesExportFinishEvent implements ShouldBroadcast
     {
         return ['general'];
     }
+
+    public function broadcastAs()
+    {
+        return 'categories-export-finish';
+    }
 }
