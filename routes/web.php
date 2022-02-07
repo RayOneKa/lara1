@@ -20,13 +20,11 @@ use Illuminate\Support\Facades\Auth;
 |
 */
 
-Route::get('/', function () {
-    return redirect()->route('home');
-})->name('main');
+Route::any('/{any}', function () {
+    return view('layouts.app');
+})->where('any', '.*');
 
-Route::get('/test', function () {
-    return view('test');
-});
+
 
 Route::prefix('home')->group(function () {
     Route::get('/', [HomeController::class, 'index'])->name('home');
@@ -34,24 +32,7 @@ Route::prefix('home')->group(function () {
     Route::post('/profile/update', [HomeController::class, 'profileUpdate'])->name('profileUpdate');
 });
 
-Route::prefix('basket')->group(function () {
-    Route::get('/', [BasketController::class, 'index'])->name('basket');
-    Route::get('/getProductsQuantity', [BasketController::class, 'getProductsQuantity']);
-    Route::post('/createOrder', [BasketController::class, 'createOrder'])->name('createOrder');
-    Route::prefix('product')->group(function () {
-        Route::post('/add', [BasketController::class, 'add'])->name('addProduct');
-        Route::post('/remove', [BasketController::class, 'remove'])->name('removeProduct');
-    });
-});
-
 Route::get('/orders', [OrderController::class, 'index'])->name('orders');
-
-
-// Route::any('/{any}', function () {
-//     return redirect(route('main'));
-// })->where('any', '.*');
-
-Auth::routes();
 
 Route::get('/email/verify', function () {
     return view('auth.verify-email');
@@ -62,9 +43,6 @@ Route::get('/email/verify/{id}/{hash}', function (EmailVerificationRequest $requ
 
     return redirect('/home');
 })->middleware(['auth', 'signed'])->name('verification.verify');
-
-Route::get('/categories/{category}', [CategoryController::class, 'category'])->name('category');
-Route::get('/categories/{category}/getProducts', [CategoryController::class, 'getProducts']);
 
 Route::prefix('admin')->middleware(['auth', 'is_admin'])->group(function () {
 

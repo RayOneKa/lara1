@@ -10,6 +10,7 @@ use App\Models\User;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
@@ -54,6 +55,9 @@ class BasketController extends Controller
 
         session()->put('products', $products);
         session()->save();
+
+        dump(session('products'));
+
         return [
             'quantity' => $products[$id],
             'basketProductsQuantity' => collect($products)->sum()

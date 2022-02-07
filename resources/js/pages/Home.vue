@@ -2,7 +2,7 @@
     <div>
         <div class="row">
             <div v-for="category in categories" :key="category.id" class="col-3">
-                <a :href="'categories/' + category.id">
+                <router-link :to="'categories/' + category.id">
                     <div class="card mb-4" style="width: 18rem;">
                         <img :src="`/storage/img/categories/` + category.picture" class="card-img-top" alt="">
                         <div class="card-body">
@@ -14,7 +14,7 @@
                             </p>
                         </div>
                     </div>
-                </a>
+                </router-link>
             </div>
         </div>
     </div>
@@ -22,6 +22,20 @@
 
 <script>
     export default {
-        props: ['categories', 'source']
+        data () {
+            return {
+                categories: []
+            }
+        },
+        mounted () {
+            console.log('mounted home')
+            axios.get('/api/categories/get')
+                .then((response) => {
+                    this.categories = response.data
+                })
+        },
+        destroyed () {
+            console.log('вышли со страницы home')
+        }
     }
 </script>

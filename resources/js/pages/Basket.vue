@@ -6,7 +6,7 @@
                     {{ error[0] }}
                 </li>
                 <template v-if="errors.email">
-                    Ссылка на <a :href="routeLogin">вход</a>
+                    Ссылка на <a href="">вход</a>
                 </template>
             </ul>
         </div>
@@ -28,7 +28,7 @@
                 </tr>
                 <tr v-if="!products.length">
                     <td class="text-center" colspan="4">
-                        Ваша корзина пока что пуста. Начните <a :href="routeHome">покупать!</a>
+                        Ваша корзина пока что пуста. Начните <a href="">покупать!</a>
                     </td>
                 </tr>
                 <tr v-else>
@@ -72,21 +72,15 @@
 
 <script>
     export default {
-        props: [
-            'errorList',
-            'routeLogin',
-            'routeHome',
-            'routeOrders',
-            'products',
-            'name',
-            'email',
-            'mainAddress'
-            ],
         data () {
             return {
                 processing: false,
                 errors: null,
-                isDisabled: true
+                isDisabled: true,
+                products: [],
+                email: '',
+                mainAddress: '',
+                name: ''
             }
         },
         computed: {
