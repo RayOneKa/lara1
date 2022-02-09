@@ -25,4 +25,9 @@ class AdminController extends Controller
         $exportColumns = true;
         ExportCategories::dispatch($exportColumns);
     }
+
+    public function users ()
+    {
+        return User::paginate(2);
+    }
 }

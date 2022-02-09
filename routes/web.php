@@ -43,22 +43,3 @@ Route::get('/email/verify/{id}/{hash}', function (EmailVerificationRequest $requ
 
     return redirect('/home');
 })->middleware(['auth', 'signed'])->name('verification.verify');
-
-Route::prefix('admin')->middleware(['auth', 'is_admin'])->group(function () {
-
-    // Route::redirect('/', '/admin/products');
-
-    /*
-    Route::get('/', function () {
-        return redirect(route('adminProducts'));
-    });
-     */
-
-    Route::get('/', [AdminController::class, 'index'])->name('admin');
-    Route::get('/enterAsUser/{userId}', [AdminController::class, 'enterAsUser'])->name('enterAsUser');
-    Route::post('/exportCategories', [AdminController::class, 'exportCategories'])->name('exportCategories');
-
-    Route::get('/products', function () {
-        return 'Админка: продукты';
-    })->name('adminProducts');
-});

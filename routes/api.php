@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AdminController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\BasketController;
 use App\Http\Controllers\CategoryController;
@@ -41,4 +42,17 @@ Route::prefix('basket')->group(function () {
         Route::post('/add', [BasketController::class, 'add'])->name('addProduct');
         Route::post('/remove', [BasketController::class, 'remove'])->name('removeProduct');
     });
+});
+
+Route::prefix('admin')->middleware(['auth', 'is_admin'])->group(function () {
+
+
+    Route::get('/users', [AdminController::class, 'users']);
+    Route::get('/', [AdminController::class, 'index'])->name('admin');
+    Route::get('/enterAsUser/{userId}', [AdminController::class, 'enterAsUser'])->name('enterAsUser');
+    Route::post('/exportCategories', [AdminController::class, 'exportCategories'])->name('exportCategories');
+
+    Route::get('/products', function () {
+        return 'Админка: продукты';
+    })->name('adminProducts');
 });
