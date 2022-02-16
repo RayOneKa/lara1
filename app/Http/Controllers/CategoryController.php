@@ -9,7 +9,6 @@ class CategoryController extends Controller
 
     public function getCategories ()
     {
-        sleep(1);
         return Category::get();
     }
 

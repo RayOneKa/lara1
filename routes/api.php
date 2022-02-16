@@ -23,18 +23,18 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-// Auth::routes();
-
-Route::post('login', [LoginController::class, 'authenticate']);
-Route::post('logout', [LoginController::class, 'logout']);
-
-Route::prefix('categories')->group(function () {
-    Route::get('/get', [CategoryController::class, 'getCategories']);
-    Route::get('{category}', [CategoryController::class, 'category'])->name('category');
-    Route::get('{category}/getProducts', [CategoryController::class, 'getProducts']);
+Route::post('/tokens/create', function (Request $request) {
+    $token = $request->user()->createToken($request->token_name);
+ 
+    return ['token' => $token->plainTextToken];
 });
 
-Route::prefix('basket')->group(function () {
+// Auth::routes();
+
+Route::post('login', [LoginController::class, 'authenticate'])->name('login');
+Route::post('logout', [LoginController::class, 'logout']);
+
+Route::middleware('auth:sanctum')->prefix('basket')->group(function () {
     Route::get('/', [BasketController::class, 'index'])->name('basket');
     Route::get('/getProductsQuantity', [BasketController::class, 'getProductsQuantity']);
     Route::post('/createOrder', [BasketController::class, 'createOrder'])->name('createOrder');
@@ -44,10 +44,14 @@ Route::prefix('basket')->group(function () {
     });
 });
 
+Route::middleware('auth:sanctum')->prefix('categories')->group(function () {
+    Route::get('/get', [CategoryController::class, 'getCategories'])->withoutMiddleware('auth:sanctum');
+    Route::get('{category}', [CategoryController::class, 'category'])->name('category');
+    Route::get('{category}/getProducts', [CategoryController::class, 'getProducts']);
+});
+
 Route::prefix('admin')->middleware(['auth', 'is_admin'])->group(function () {
-
-
-    Route::get('/users', [AdminController::class, 'users']);
+    Route::post('/users', [AdminController::class, 'users']);
     Route::get('/', [AdminController::class, 'index'])->name('admin');
     Route::get('/enterAsUser/{userId}', [AdminController::class, 'enterAsUser'])->name('enterAsUser');
     Route::post('/exportCategories', [AdminController::class, 'exportCategories'])->name('exportCategories');

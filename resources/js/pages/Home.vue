@@ -27,8 +27,12 @@
                 categories: []
             }
         },
+        methods: {
+            redirect () {
+                this.$router.push('/categories/1')
+            }
+        },
         mounted () {
-            console.log('mounted home')
             axios.get('/api/categories/get')
                 .then((response) => {
                     this.categories = response.data
