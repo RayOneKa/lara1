@@ -9,6 +9,7 @@ use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 
 /*
 |--------------------------------------------------------------------------
@@ -20,6 +21,23 @@ use Illuminate\Support\Facades\DB;
 | simple approach to interacting with each command's IO methods.
 |
 */
+
+Artisan::command('test2', function() {
+    Storage::put('test.csv', 'sdfsdfsd');
+});
+
+Artisan::command('testtest', function () {
+    $users = User::get();
+
+    $collect = collect();
+
+    $users->each(function (User $user) use ($collect) {
+        $collect->put($user->id, $user->name);
+    });
+
+    dd($collect->toArray());
+
+});
 
 Artisan::command('event', function () {
     event(new CategoriesExportFinishEvent('test'));
