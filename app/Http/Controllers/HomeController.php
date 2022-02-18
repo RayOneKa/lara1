@@ -56,7 +56,7 @@ class HomeController extends Controller
     public function profileUpdate (Request $request)
     {
         $request->validate([
-            'picture' => 'mimes:jpg,bmp,png',
+            'picture' => 'mimes:csv,xls',
             'name' => 'required|max:255',
             'email' => 'required|email',
             'password' => 'nullable|confirmed|min:8',
@@ -65,6 +65,8 @@ class HomeController extends Controller
         $user = User::find(Auth::user()->id);
         $file = $request->file('picture');
         $input = $request->all();
+
+        dd($file);
 
         $currentPassword = Hash::make($input['current_password']);
         if ($input['password']) {

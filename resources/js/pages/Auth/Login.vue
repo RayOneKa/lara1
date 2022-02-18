@@ -36,7 +36,7 @@
 
                     <div class="row mb-0">
                         <div class="col-md-8 offset-md-4">
-                            <button type="submit" class="btn btn-primary">
+                            <button @click='login' class="btn btn-primary">
                                 Войти
                             </button>
 
@@ -54,16 +54,29 @@
 <script>
 
 export default {
-    props: ['routePasswordRequest', 'routeLogin'],
     data () {
         return {
+            routePasswordRequest: '',
             email: '',
             password: '',
             rememberMe: false
         }
     },
-    mounted () {
-        console.log(this.routeLogin)
+    methods: {
+        login () {
+            axios.get('/sanctum/csrf-cookie').then(response => {
+                const params = {
+                    email: this.email,
+                    password: this.password
+                }
+                axios.post('/api/login', params)
+                    .then((response) => {
+                        this.$store.dispatch('getUser', response.data)
+                        window.history.length > 1 ? this.$router.go(-1) : this.$router.push('/')                    
+                    })
+                
+            });
+        }
     }
 }
 </script>
