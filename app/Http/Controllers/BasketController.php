@@ -56,8 +56,6 @@ class BasketController extends Controller
         session()->put('products', $products);
         session()->save();
 
-        dump(session('products'));
-
         return [
             'quantity' => $products[$id],
             'basketProductsQuantity' => collect($products)->sum()
